@@ -1,0 +1,51 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "MethodScript",
+	"patterns": [
+		{"include": "#keywords"},
+		{"include": "#smart_strings"},
+		{"include": "#strings"},
+		{"include": "#variable"}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.mscript",
+				"match": "\\b(if|while|for|return)\\b"
+			}]
+		},
+		"smart_strings": {
+			"name": "string.quoted.interpolated.mscript",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [{
+				"name": "constant.character.escape.mscript",
+				"match": "\\\\."
+			}, {
+				"include": "#interpolation"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.single.mscript",
+			"begin": "'",
+			"end": "'",
+			"patterns": [{
+					"name": "constant.character.escape.mscript",
+					"match": "\\\\."
+			}]
+		},
+		"interpolation": {
+			"patterns": [{
+				"include": "#variable"
+			}]
+		},
+		"variable": {
+			"patterns": [{
+				"name": "support.variable.mscript",
+				"match": "@[a-zA-Z0-9_]+"
+			}]
+		}
+
+	},
+	"scopeName": "source.mscript"
+}

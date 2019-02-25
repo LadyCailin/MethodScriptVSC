@@ -1,18 +1,30 @@
 export class API {
     readonly events : Map<string, APIEvent>;
-    // readonly functions : Map<string, APIFunction>;
-    // readonly objects : Map<string, APIObject>;
-    // readonly keywords : Map<string, APIKeyword>;
-    // readonly extensions : Map<string, APIExtension>;
+    readonly functions : Map<string, APIFunction>;
+    readonly objects : Map<string, APIObject>;
+    readonly keywords : Map<string, APIKeyword>;
+    readonly extensions : Map<string, APIExtension>;
     constructor(api : any) {
         this.events = new Map();
         Object.entries(api["events"]).forEach(([event, data]) => {
             this.events.set(event, new APIEvent(data));
         });
-        // this.functions = new Map();
-        // Object.entries(api["functions"]).forEach(([func, data]) => {
-        //     this.functions.set(func, new APIFunction(data));
-        // });
+        this.functions = new Map();
+        Object.entries(api["functions"]).forEach(([func, data]) => {
+            this.functions.set(func, new APIFunction(data));
+        });
+        this.objects = new Map();
+        Object.entries(api["objects"]).forEach(([object, data]) => {
+            this.objects.set(object, new APIObject(data));
+        });
+        this.keywords = new Map();
+        Object.entries(api["keywords"]).forEach(([keyword, data]) => {
+            this.keywords.set(keyword, new APIKeyword(data));
+        });
+        this.extensions = new Map();
+        Object.entries(api["extensions"]).forEach(([extension, data]) => {
+            this.extensions.set(extension, new APIExtension(data));
+        });
     }
 }
 
@@ -72,19 +84,80 @@ export class APIEventPrefilterData {
 }
 
 export class APIFunction {
-    
+    readonly args : string;
+    readonly coreFunction : boolean;
+    readonly desc : string;
+    readonly extdesc : string;
+    readonly hidden : boolean;
+    readonly name : string;
+    readonly optimizations : Array<string>;
+    readonly restricted : boolean;
+    readonly ret : string;
+    readonly shortdesc : string;
+    readonly since : APIVersion;
+    readonly source : APISource;
+    readonly thrown : Array<string>;
+
+    constructor(api : any) {
+        this.args = api["args"] as string;
+        this.coreFunction = api["coreFunction"] as boolean;
+        this.desc = api["desc"] as string;
+        this.extdesc = api["extdesc"] as string;
+        this.hidden = api["hidden"] as boolean;
+        this.name = api["name"] as string;
+        this.optimizations = [];
+        api["optimizations"].forEach((item : string) => this.optimizations.push(item as string));
+        this.restricted = api["restricted"] as boolean;
+        this.ret = api["ret"] as string;
+        this.shortdesc = api["shortdesc"] as string;
+        this.since = new APIVersion(api["since"] as string);
+        this.source = new APISource(api["source"] as string);
+        this.thrown = [];
+        api["thrown"].forEach((item : string) => this.thrown.push(item));
+    }
 }
 
 export class APIObject {
-
+    readonly docs : string;
+    readonly interfaces : Array<string>;
+    readonly since : APIVersion;
+    readonly source : APISource;
+    readonly superclasses : Array<string>;
+    readonly type : string;
+    constructor(api : any) {
+        this.docs = api["docs"] as string;
+        this.interfaces = [];
+        api["interfaces"].forEach((item : string) => this.interfaces.push(item));
+        this.since = new APIVersion(api["since"] as string);
+        this.source = new APISource(api["source"] as string);
+        this.superclasses = [];
+        api["superclasses"].forEach((item : string) => this.superclasses.push(item));
+        this.type = api["type"] as string;
+    }
 }
 
 export class APIKeyword {
+    readonly docs : string;
+    readonly name : string;
+    readonly since : APIVersion;
+    readonly source : APISource;
 
+    constructor(api : any) {
+        this.docs = api["docs"] as string;
+        this.name = api["name"] as string;
+        this.since = new APIVersion(api["since"] as string);
+        this.source = new APISource(api["source"] as string);
+    }
 }
 
 export class APIExtension {
+    readonly id : APISource;
+    readonly version : APIVersion;
 
+    constructor(api : any) {
+        this.id = new APISource(api["id"] as string);
+        this.version = new APIVersion(api["version"] as string);
+    }
 }
 
 export class APIVersion {

@@ -30,6 +30,14 @@ export function activate(context: vscode.ExtensionContext) {
 				if(error) {
 					vscode.window.showErrorMessage("Something went wrong: " + error.message);
 				}
+				if(stdout.startsWith("Mode json-api was not found.")) {
+					// This is what the older versions say when we try to load the api, so let's give a bit better of an
+					// error message besides the generic *something went wrong*
+					console.log("Too old MethodScript version");
+					vscode.window.showErrorMessage("The version of MethodScript that you've selected is too old to work.\n"
+						+ "Please select an updated version.");
+					return;
+				}
 				var api : API;
 				try {
 					api = new API(JSON.parse(stdout));
@@ -40,12 +48,24 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 				console.log("Successfully parsed API");
 				vscode.window.setStatusBarMessage("MethodScript Profile loaded: "
-					+ api.events.size + " events", 5000);
+					+ api.events.size + " events; "
+					+ api.functions.size + " functions; "
+					+ api.objects.size + " objects; "
+					+ api.keywords.size + " keywords; "
+					+ api.extensions.size + " extensions;", 5000);
 			});
 		});
 	}));
 
 }
+
+vscode.languages.registerHoverProvider('mscript', {
+	provideHover(document, position, token) {
+		return {
+			contents: ["Hover Content"]
+		};
+	}
+});
 
 // this method is called when your extension is deactivated
 export function deactivate() {}

@@ -5,13 +5,20 @@
 		{"include": "#keywords"},
 		{"include": "#smart_strings"},
 		{"include": "#strings"},
-		{"include": "#variable"}
+		{"include": "#variable"},
+		{"include": "#ivariable"},
+		{"include": "#line_comment_number_sign"},
+		{"include": "#hash_bang"},
+		{"include": "#line_comment_double_slash"},
+		{"include": "#block_comment"},
+		{"include": "#smart_comment"},
+		{"include": "#file_options"}
 	],
 	"repository": {
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.mscript",
-				"match": "\\b(if|while|for|return)\\b"
+				"match": "\\b(as|auto|bind|case|catch|closure|default|do|else|false|finally|for|foreach|iclosure|if|in|instanceof|notinstanceof|null|proc|switch|synchronized|true|try|while)\\b"
 			}]
 		},
 		"smart_strings": {
@@ -36,13 +43,82 @@
 		},
 		"interpolation": {
 			"patterns": [{
-				"include": "#variable"
+				"include": "#ivariable"
+			}, {
+				"include": "#interpolated_variable"
+			}]
+		},
+		"ivariable": {
+			"patterns": [{
+				"name": "support.variable.mscript",
+				"match": "@[a-zA-Z0-9_]+"
 			}]
 		},
 		"variable": {
 			"patterns": [{
 				"name": "support.variable.mscript",
-				"match": "@[a-zA-Z0-9_]+"
+				"match": "\\$[a-zA-Z0-9_]*"
+			}]
+		},
+		"interpolated_variable": {
+			"patterns": [{
+				"name": "support.variable.mscript",
+				"match": "@\\{[a-zA-Z0-9\\[\\]'\"]+}"
+			}]
+		},
+		"file_options": {
+			"patterns": [{
+				"name": "comment.block.documentation.mscript",
+				"begin": "<!",
+				"end": ">",
+				"patterns": [{
+					"name": "constant.language.file_option.mscript",
+					"match": "(strict|suppressWarnings|name|author|created|description|requiredExtensions|compilerOptions)"
+				}, {
+					"name": "constant.character.escape.mscript",
+					"match": "\\\\>"
+				}, {
+					"name": "constant.character.mscript",
+					"match": ";"
+				}, {
+					"name": "constant.character.mscript",
+					"match": ":"
+				}]
+			}]
+		},
+		"hashbang": {
+			"patterns": [{
+				"name": "comment.line.number-sign.mscript",
+				"begin": "#!",
+				"end": "\n"
+			}]
+		},
+		"line_comment_number_sign": {
+			"patterns": [{
+				"name": "comment.line.number-sign",
+				"begin": "#",
+				"end": "\n"
+			}]
+		},
+		"line_comment_double_slash": {
+			"patterns": [{
+				"name": "comment.line.double-dash",
+				"begin": "//",
+				"end": "\n"
+			}]
+		},
+		"smart_comment": {
+			"patterns": [{
+				"name": "comment.block.documentation",
+				"begin": "/\\*\\*",
+				"end": "\\*/"
+			}]
+		},
+		"block_comment": {
+			"patterns": [{
+				"name": "comment.block",
+				"begin": "/\\*",
+				"end": "\\*/"
 			}]
 		}
 

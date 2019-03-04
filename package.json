@@ -2,9 +2,9 @@
 	"name": "methodscriptvsc",
 	"displayName": "MethodScriptVSC",
 	"description": "The official Visual Studio Code extension for MethodScript support.",
-	"version": "0.2.0",
+	"version": "0.0.1",
 	"license": "MIT",
-	"publisher": "methodscript-contributors",
+	"publisher": "MethodScriptVSC",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/LadyCailin/MethodScriptVSC"

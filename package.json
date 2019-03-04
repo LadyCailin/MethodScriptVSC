@@ -2,7 +2,7 @@
 	"name": "methodscriptvsc",
 	"displayName": "MethodScriptVSC",
 	"description": "The official Visual Studio Code extension for MethodScript support.",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"license": "MIT",
 	"publisher": "methodscript-contributors",
 	"repository": {
@@ -13,9 +13,16 @@
 		"vscode": "^1.31.0"
 	},
 	"categories": [
-		"Programming Languages", "Linters", "Debuggers"
+		"Programming Languages",
+		"Linters",
+		"Debuggers"
 	],
-	"keywords": ["MethodScript", "CommandHelper", "Minecraft", "mscript"],
+	"keywords": [
+		"MethodScript",
+		"CommandHelper",
+		"Minecraft",
+		"mscript"
+	],
 	"galleryBanner": {
 		"color": "#C80000",
 		"theme": "dark"
@@ -33,20 +40,28 @@
 				"title": "Choose MethodScript Profile"
 			}
 		],
-		"languages": [{
-			"id": "mscript",
-			"extensions": [
-				".ms", ".msa", ".mslp"
-			],
-			"aliases": ["MethodScript"],
-			"firstLine": "#!/usr/bin/env /usr/local/bin/mscript",
-			"configuration": "./language-configuration.json"
-		}],
-		"grammars": [{
-            "language": "mscript",
-            "scopeName": "source.mscript",
-            "path": "./syntaxes/mscript.tmLanguage.json"
-        }]
+		"languages": [
+			{
+				"id": "mscript",
+				"extensions": [
+					".ms",
+					".msa",
+					".mslp"
+				],
+				"aliases": [
+					"MethodScript"
+				],
+				"firstLine": "#!/usr/bin/env /usr/local/bin/mscript",
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "mscript",
+				"scopeName": "source.mscript",
+				"path": "./syntaxes/mscript.tmLanguage.json"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

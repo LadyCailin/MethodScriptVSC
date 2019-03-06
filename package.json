@@ -30,7 +30,8 @@
 	"icon": "CommandHelper_Icon.png",
 	"preview": true,
 	"activationEvents": [
-		"onCommand:extension.msprofile"
+		"onCommand:extension.msprofile",
+		"onLanguage:mscript"
 	],
 	"main": "./out/extension.js",
 	"contributes": {

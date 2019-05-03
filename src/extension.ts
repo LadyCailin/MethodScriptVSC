@@ -75,7 +75,7 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log('methodscriptvsc activated');
 	let profileLocation = context.globalState.get(PROFILE_LOCATION);
 	if(typeof(profileLocation) === "undefined") {
-		vscode.window.showInformationMessage("No MethodScript profile is loaded.", "Click here to load.")
+		vscode.window.showInformationMessage("No MethodScript profile is loaded. Choose the location of the MethodScript/CommandHelper jar of your installation.", "Click here to load.")
 			.then(function(value){
 				pickProfile(context, function(success : boolean) {
 					if(success) {

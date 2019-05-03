@@ -3,10 +3,15 @@
 This is the official Visual Studio Code IDE for MethodScript. Generally, this code should not be used directly, the extension should be downloaded
 directly from the Marketplace. First, download Visual Studio Code, then find the MethodScriptVSC extension.
 
+On first run, you will be prompted to link to your jar. This will need to be re-linked if you wish to compile against a different jar, or if the
+file is moved. If no profile is selected, the plugin should prompt you, but to manually select the profile, use ctrl+shift+p and run
+"Choose MethodScript Profile". You may be prompted to update the jar if you are on a very old version, as this extension only works with
+the latest versions.
+
 ## Features
 
-The IDE allows you to more easily code in MethodScript. More than just syntax highlighting, the IDE will highlight errors for you as you code, so
-you don't need to compile the code just to find out something is wrong. Get information about functions, events, and objects, all without leaving
+The IDE allows you to more easily code in MethodScript. More than just syntax highlighting, ~~the IDE will highlight errors for you as you code, so
+you don't need to compile the code just to find out something is wrong~~ (coming soon!). Get information about functions, events, and objects, all without leaving
 the IDE. The functions and highlighting are based on your local copy of MethodScript, which will also include help for extensions and whatever
 version you're currently running, even if the information on methodscript.com is for another version.
 
@@ -19,7 +24,7 @@ MethodScript/CommandHelper jar file.
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
-## Building and running locally
+## Dev Info
 
 - Download Visual Studio Code ([Free Download](https://code.visualstudio.com/Download) for Mac, Linux, and Windows)
 - Install node.js and npm ([Mac, Windows](https://nodejs.org/en/download/)/Debian-based: `sudo apt-get install nodejs npm`)
@@ -43,3 +48,8 @@ Make sure you install and run from within the sandbox first, then
 - Delete the extension folder at the specified location:
     - Windows: `%USERPROFILE%\.vscode\extensions`
     - Mac/Linux: `~/.vscode/extentions`
+
+### Publishing
+
+To publish the version on the marketplace, run `vsce publish <version>` where `<version>` is one of `major`,
+`minor`, or `patch`. You'll need the Personal Access Token from your organization.

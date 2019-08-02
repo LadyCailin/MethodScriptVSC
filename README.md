@@ -51,5 +51,11 @@ Make sure you install and run from within the sandbox first, then
 
 ### Publishing
 
-To publish the version on the marketplace, run `vsce publish <version>` where `<version>` is one of `major`,
+To publish the version on the marketplace, first ensure that the vsce command is up to date,
+so it doesn't fail midway through: `npm install -g vsce`
+
+Then run `vsce publish <version>` where `<version>` is one of `major`,
 `minor`, or `patch`. You'll need the Personal Access Token from your organization.
+
+This will publish the version, and create a new commit and release tag. Push the changes
+afterwards, `git push`.

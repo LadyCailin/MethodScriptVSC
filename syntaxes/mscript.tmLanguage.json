@@ -2,6 +2,12 @@
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "MethodScript",
 	"patterns": [
+		{"include": "#line_comment_number_sign"},
+		{"include": "#hash_bang"},
+		{"include": "#line_comment_double_slash"},
+		{"include": "#smart_comment"},
+		{"include": "#block_comment"},
+		{"include": "#file_options"},
 		{"include": "#keywords"},
 		{"include": "#smart_strings"},
 		{"include": "#strings"},
@@ -10,12 +16,6 @@
 		{"include": "#numerics"},
 		{"include": "#variable"},
 		{"include": "#ivariable"},
-		{"include": "#line_comment_number_sign"},
-		{"include": "#hash_bang"},
-		{"include": "#line_comment_double_slash"},
-		{"include": "#block_comment"},
-		{"include": "#smart_comment"},
-		{"include": "#file_options"},
 		{"include": "#functions"}
 	],
 	"repository": {
@@ -48,7 +48,7 @@
 		"operators": {
 			"patterns": [{
 				"name": "keyword.operator.mscript",
-				"match": "([\\=\\<\\>\\!\\|\\&\\%\\+\\-\\*\\/\\.])"
+				"match": "([=\\<\\>!\\|&%\\+\\-\\*/\\.])"
 			}]
 		},
 		"labels": {
@@ -85,7 +85,7 @@
 		"interpolated_variable": {
 			"patterns": [{
 				"name": "support.variable.mscript",
-				"match": "@\\{[a-zA-Z0-9\\[\\]'\"]+}"
+				"match": "@\\{[a-zA-Z0-9_\\[\\]'\"]+}"
 			}]
 		},
 		"file_options": {

@@ -4,6 +4,12 @@ All notable changes to the "methodscriptvsc" extension will be documented in thi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.0.1
+- Add code completion support.
+- Add error checking as you code. Saving the file triggers the code to compile, and highlights the errors directly in Visual Studio Code.
+
+These features are implemented via support for a language server, so future upgrades should be possible without updating the extension, just be sure to keep you jar file up to date!
+
 ## 0.3.3
 - Improve highlighting accuracy compared to compiler.
 

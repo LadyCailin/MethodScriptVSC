@@ -10,8 +10,8 @@ the latest versions.
 
 ## Features
 
-The IDE allows you to more easily code in MethodScript. More than just syntax highlighting, ~~the IDE will highlight errors for you as you code, so
-you don't need to compile the code just to find out something is wrong~~ (coming soon!). Get information about functions, events, and objects, all without leaving
+The IDE allows you to more easily code in MethodScript. More than just syntax highlighting, the IDE will highlight errors for you as you code, so
+you don't need to compile the code just to find out something is wrong. Get information about functions, events, and objects, all without leaving
 the IDE. The functions and highlighting are based on your local copy of MethodScript, which will also include help for extensions and whatever
 version you're currently running, even if the information on methodscript.com is for another version.
 

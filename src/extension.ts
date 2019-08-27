@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as net from 'net';
-import * as url from 'url'
+import * as url from 'url';
 import * as exec from 'child_process';
 import * as API from './API';
 

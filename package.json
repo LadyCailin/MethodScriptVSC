@@ -28,7 +28,7 @@
     "theme": "dark"
   },
   "icon": "CommandHelper_Icon.png",
-  "preview": true,
+  "preview": false,
   "activationEvents": [
     "onCommand:extension.msprofile",
     "onLanguage:mscript"

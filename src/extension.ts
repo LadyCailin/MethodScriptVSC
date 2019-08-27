@@ -1,16 +1,26 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as net from 'net';
+import * as url from 'url'
 import * as exec from 'child_process';
 import * as API from './API';
+
+import {
+	LanguageClient,
+	LanguageClientOptions,
+	StreamInfo,
+	ServerOptions,
+	TransportKind,
+	SocketTransport
+  } from 'vscode-languageclient';
 
 const PROFILE_LOCATION : string = "mscript.profile.location";
 
 type LoadMScriptCallback = (success : boolean) => void;
 
 let api : API.API;
+let client : LanguageClient;
 
-export function loadMscript(jar : string, callback : LoadMScriptCallback) {
+export function loadMscript(context: vscode.ExtensionContext, jar : string, callback : LoadMScriptCallback) {
 	let status = vscode.window.setStatusBarMessage("Buffering API from jar, code hints unavailable until finished...");
 	exec.exec('java -jar \"' + jar + '\" json-api', {maxBuffer: 1024*1024*1024*200}, (error, stdout, stderr) => {
 		status.dispose();
@@ -43,8 +53,93 @@ export function loadMscript(jar : string, callback : LoadMScriptCallback) {
 			+ api.objects.size + " objects; "
 			+ api.keywords.size + " keywords; "
 			+ api.extensions.size + " extensions;", 5000);
+		startupLanguageServer(context, jar);
 		callback(true);
 	});
+}
+
+function startupLanguageServer(context: vscode.ExtensionContext, jar : string) : void {
+
+	let client: LanguageClient;
+
+	const serverOptions = () =>
+		new Promise<exec.ChildProcess | StreamInfo>((resolve, reject) => {
+			// Use a TCP socket, since that is more prevalent
+			const server = net.createServer(socket => {
+				console.log('MethodScript process connected');
+				socket.on('end', () => {
+					console.log('MethodScript process disconnected');
+				});
+				server.close();
+				resolve({ reader: socket, writer: socket });
+			});
+			// Listen on random port
+			server.listen(0, '127.0.0.1', () => {
+				let args = [
+					// TODO: Figure out how to selectively enable debug mode
+					// "-Xdebug",
+					// "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9001",
+					"-jar",
+					jar,
+					'lang-serv',
+					'--host',
+					'127.0.0.1',
+					'--port',
+					(server.address() as net.AddressInfo).port.toString()
+				];
+				const childProcess = exec.spawn("java", args);
+				childProcess.stderr.on('data', (chunk: Buffer) => {
+					const str = chunk.toString();
+					console.log('MethodScript Language Server stderr:', str);
+					client.outputChannel.appendLine(str);
+				});
+				childProcess.stdout.on('data', (chunk: Buffer) => {
+					const str = chunk.toString();
+					if(str.indexOf("Mode lang-serv was not found") !== -1) {
+						// Old version, inform the user to update
+						vscode.window.showInformationMessage("Too old a version of MethodScript, please update your jar"
+							+ " to unlock the full potential of the MethodScriptVSC extension, including code completion"
+							+ " and error checking!");
+						return;
+					}
+					console.log('MethodScript Language Server stdout:', str);
+					client.outputChannel.appendLine(str);
+				});
+				childProcess.on('exit', (code, signal) => {
+					if (code !== 0) {
+						client.outputChannel.appendLine(
+							`Language server exited ` + (signal ? `f5rom signal ${signal}` : `with exit code ${code}`)
+						);
+						client.outputChannel.show();
+					}
+				});
+				return childProcess;
+			});
+		});
+
+	// Options to control the language client
+	const clientOptions: LanguageClientOptions = {
+		// Register the server for MethodScript documents
+		documentSelector: [{ scheme: 'file', language: 'mscript' }, { scheme: 'untitled', language: 'mscript' }],
+		uriConverters: {
+			// VS Code by default %-encodes even the colon after the drive letter
+			// NodeJS handles it much better
+			code2Protocol: uri => url.format(url.parse(uri.toString(true))),
+			protocol2Code: str => vscode.Uri.parse(str),
+		},
+		synchronize: {
+			// Notify the server about changes to MethodScript files in the workspace
+			fileEvents: vscode.workspace.createFileSystemWatcher('**/*.msa?'),
+		},
+	};
+
+	// Create the language client and start the client.
+	client = new LanguageClient('MethodScript Language Server', serverOptions, clientOptions);
+	const disposable = client.start();
+
+	// Push the disposable to the context's subscriptions so that the
+	// client can be deactivated on extension deactivation
+	context.subscriptions.push(disposable);
 }
 
 export function pickProfile(context : vscode.ExtensionContext, callback : LoadMScriptCallback) {
@@ -61,7 +156,7 @@ export function pickProfile(context : vscode.ExtensionContext, callback : LoadMS
 		}
 		let jar = uri[0].path.substr(1);
 		console.log("Using this as the jar location:", jar);
-		loadMscript(jar, function(success : boolean) {
+		loadMscript(context, jar, function(success : boolean) {
 			if(success) {
 				console.log("Saving " + jar + " to " + PROFILE_LOCATION + " in the globalState");
 				context.globalState.update(PROFILE_LOCATION, jar);
@@ -87,7 +182,7 @@ export function activate(context: vscode.ExtensionContext) {
 				});
 			});
 	} else {
-		loadMscript(context.globalState.get(PROFILE_LOCATION) as string, function(success : boolean) {
+		loadMscript(context, context.globalState.get(PROFILE_LOCATION) as string, function(success : boolean) {
 			if(!success) {
 				vscode.window.showErrorMessage("The stored MethodScript profile could not be loaded.", "Click here to load again.")
 					.then(function(value) {
@@ -147,4 +242,8 @@ vscode.languages.registerHoverProvider('mscript', {
 });
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+	if(client !== null) {
+		client.stop();
+	}
+}

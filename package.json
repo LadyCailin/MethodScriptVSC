@@ -35,6 +35,21 @@
   ],
   "main": "./dist/MethodScriptVSC.js",
   "contributes": {
+    "configuration": {
+      "title": "MethodScript",
+      "properties": {
+        "methodscript.langserv.debugModeEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, when the language server is started, it is started in debug mode. (Restart/reload Visual Studio Code for the setting to take effect.)"
+        },
+        "methodscript.langserv.debugPort": {
+          "type": "number",
+          "default": 9001,
+          "description": "If debug mode in enabled, the port to start on."
+        }
+      }
+    },
     "commands": [
       {
         "command": "extension.msprofile",
@@ -75,7 +90,7 @@
     "test-compile": "tsc -p ./"
   },
   "dependencies": {
-    "vscode-languageclient": "^4.4.2",
+    "vscode-languageclient": "^5.2.1",
     "vscode-languageserver": "^5.2.1",
     "watch": "^1.0.2"
   },
@@ -83,9 +98,9 @@
     "@types/mocha": "^2.2.42",
     "@types/node": "^10.12.21",
     "ts-loader": "^6.0.4",
-    "tslint": "^5.12.1",
-    "typescript": "^3.3.1",
-    "vscode": "^1.1.34",
+    "tslint": "^5.19.0",
+    "typescript": "^3.6.2",
+    "vscode": "^1.1.36",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7"
   }

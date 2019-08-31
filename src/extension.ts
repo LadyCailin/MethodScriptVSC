@@ -22,7 +22,7 @@ let client : LanguageClient;
 
 export function loadMscript(context: vscode.ExtensionContext, jar : string, callback : LoadMScriptCallback) {
 	let status = vscode.window.setStatusBarMessage("Buffering API from jar, code hints unavailable until finished...");
-	exec.exec('java -jar \"' + jar + '\" json-api', {maxBuffer: 1024*1024*1024*200}, (error, stdout, stderr) => {
+	exec.exec('java -Djava.awt.headless=true -jar \"' + jar + '\" json-api', {maxBuffer: 1024*1024*1024*200}, (error, stdout, stderr) => {
 		status.dispose();
 		console.log("error: ", error);
 		console.log("stderr: ", stderr);
@@ -76,9 +76,7 @@ function startupLanguageServer(context: vscode.ExtensionContext, jar : string) :
 			// Listen on random port
 			server.listen(0, '127.0.0.1', () => {
 				let args = [
-					// TODO: Figure out how to selectively enable debug mode
-					// "-Xdebug",
-					// "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9001",
+					"-Djava.awt.headless=true",
 					"-jar",
 					jar,
 					'lang-serv',
@@ -87,6 +85,11 @@ function startupLanguageServer(context: vscode.ExtensionContext, jar : string) :
 					'--port',
 					(server.address() as net.AddressInfo).port.toString()
 				];
+				// console.log(vscode.workspace.getConfiguration("methodscript"));
+				if(vscode.workspace.getConfiguration("methodscript").langserv.debugModeEnabled) {
+					args.unshift("-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address="
+						+ vscode.workspace.getConfiguration("methodscript").langserv.debugPort);
+				}
 				const childProcess = exec.spawn("java", args);
 				childProcess.stderr.on('data', (chunk: Buffer) => {
 					const str = chunk.toString();

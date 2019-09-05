@@ -72,19 +72,19 @@
 		},
 		"ivariable": {
 			"patterns": [{
-				"name": "support.variable.mscript",
+				"name": "variable.other.mscript",
 				"match": "@[a-zA-Z0-9_]+"
 			}]
 		},
 		"variable": {
 			"patterns": [{
-				"name": "support.variable.mscript",
+				"name": "variable.other.mscript",
 				"match": "\\$[a-zA-Z0-9_]*"
 			}]
 		},
 		"interpolated_variable": {
 			"patterns": [{
-				"name": "support.variable.mscript",
+				"name": "variable.other.mscript",
 				"match": "@\\{[a-zA-Z0-9_]+}"
 			}]
 		},

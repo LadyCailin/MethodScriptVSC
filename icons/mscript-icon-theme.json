@@ -1,0 +1,14 @@
+{
+    "iconDefinitions": {
+        "ms": {
+            "iconPath": "./images/ms.svg"
+        },
+        "msa": {
+            "iconPath": "./images/msa.png"
+        }
+    },
+    "fileExtensions": {
+        "ms": "ms",
+        "msa": "msa"
+    }
+}

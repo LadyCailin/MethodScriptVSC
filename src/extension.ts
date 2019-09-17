@@ -3,6 +3,7 @@ import * as net from 'net';
 import * as url from 'url';
 import * as exec from 'child_process';
 import * as API from './API';
+// import * as http from 'http';
 
 import {
 	LanguageClient,
@@ -22,6 +23,22 @@ let client : LanguageClient;
 
 export function loadMscript(context: vscode.ExtensionContext, jar : string, callback : LoadMScriptCallback) {
 	let status = vscode.window.setStatusBarMessage("Buffering API from jar, code hints unavailable until finished...");
+	// Re-add this to package.json before uncommenting
+	// "methodscript.checkForUpdates": {
+	// 	"type": "boolean",
+	// 	"default": true,
+	// 	"description": "If true, checks for updates of the currently loaded MethodScript profile, and if available, gives you the option to update the jar."
+	//   }
+	// vscode.window.showInformationMessage("Checking for updates?");
+	// if(vscode.workspace.getConfiguration("methodscript").checkForUpdates) {
+	// 	vscode.window.showInformationMessage("Checking for updates.");
+	// 	var options = {method: 'HEAD', host: 'methodscript.com', port: 443, path: '/MethodScript.jar'};
+	// 	var req = http.request(options, function(res) {
+	// 		vscode.window.showInformationMessage(JSON.stringify(res.headers));
+	// 	});
+	// 	req.end();
+	// }
+
 	exec.exec('java -Djava.awt.headless=true -jar \"' + jar + '\" json-api', {maxBuffer: 1024*1024*1024*200}, (error, stdout, stderr) => {
 		status.dispose();
 		console.log("error: ", error);
@@ -145,7 +162,7 @@ function startupLanguageServer(context: vscode.ExtensionContext, jar : string) :
 	context.subscriptions.push(disposable);
 }
 
-export function pickProfile(context : vscode.ExtensionContext, callback : LoadMScriptCallback) {
+export function pickProfile(global: boolean, context : vscode.ExtensionContext, callback : LoadMScriptCallback) {
 	let options : vscode.OpenDialogOptions = {
 		canSelectMany: false,
 		filters: {
@@ -157,12 +174,21 @@ export function pickProfile(context : vscode.ExtensionContext, callback : LoadMS
 			callback(false);
 			return;
 		}
-		let jar = uri[0].path.substr(1);
+		console.log("uri is");
+		console.log(uri);
+		
+		let jar = "";
+		if(uri[0].path.match(/\/[a-zA-Z]:\//)) {
+			// Windows file paths look like "/C:/blah". In this case, we need to remove the leading /
+			jar = uri[0].path.substr(1);
+		} else {
+			jar = uri[0].path;
+		}
 		console.log("Using this as the jar location:", jar);
 		loadMscript(context, jar, function(success : boolean) {
 			if(success) {
-				console.log("Saving " + jar + " to " + PROFILE_LOCATION + " in the globalState");
-				context.globalState.update(PROFILE_LOCATION, jar);
+				console.log("Saving " + jar + " to " + PROFILE_LOCATION + " in the " + (global ? "global" : "workspace") + "State");
+				(global ? context.globalState : context.workspaceState).update(PROFILE_LOCATION, jar);
 			}
 			callback(success);
 		});
@@ -171,16 +197,19 @@ export function pickProfile(context : vscode.ExtensionContext, callback : LoadMS
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log('methodscriptvsc activated');
-	let profileLocation = context.globalState.get(PROFILE_LOCATION);
+	let profileLocation = context.workspaceState.get(PROFILE_LOCATION);
+	if(profileLocation === "undefined") {
+		profileLocation = context.globalState.get(PROFILE_LOCATION);
+	}
 	if(typeof(profileLocation) === "undefined") {
 		vscode.window.showInformationMessage("No MethodScript profile is loaded. Choose the location of the MethodScript/CommandHelper jar of your installation.", "Click here to load.")
 			.then(function(value){
-				pickProfile(context, function(success : boolean) {
+				pickProfile(true, context, function(success : boolean) {
 					if(success) {
 						vscode.window.showInformationMessage("Profile selected. If you wish to change the profile in the future,"
 							+ " run the \"Choose MethodScript Profile\" command.");
 					} else {
-						vscode.window.showErrorMessage("Profile was not selected. To try again, run the \"Choose MethodScript Profile\" command.");
+						vscode.window.showErrorMessage("Profile was not selected. To try again, run the \"Choose * MethodScript Profile\" command.");
 					}
 				});
 			});
@@ -189,10 +218,10 @@ export function activate(context: vscode.ExtensionContext) {
 			if(!success) {
 				vscode.window.showErrorMessage("The stored MethodScript profile could not be loaded.", "Click here to load again.")
 					.then(function(value) {
-						pickProfile(context, function(success : boolean) {
+						pickProfile(true, context, function(success : boolean) {
 							if(!success) {
 								vscode.window.showErrorMessage("Profile could not be loaded. Fix the errors, then try"
-									+ " again with the \"Choose MethodScript Profile\" command");
+									+ " again with the \"Choose * MethodScript Profile\" command");
 							}
 						});
 					});
@@ -200,10 +229,13 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	}
 
-	context.subscriptions.push(vscode.commands.registerCommand('extension.msprofile', () => {		
-		pickProfile(context, function(success: boolean) {});
+	context.subscriptions.push(vscode.commands.registerCommand('extension.globalmsprofile', () => {
+		pickProfile(true, context, function(success: boolean) {});
 	}));
 
+	context.subscriptions.push(vscode.commands.registerCommand('extension.workspacemsprofile', () => {
+		pickProfile(false, context, function(success: boolean) {});
+	}));
 }
 
 vscode.languages.registerHoverProvider('mscript', {

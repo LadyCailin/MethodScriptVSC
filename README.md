@@ -5,8 +5,10 @@ directly from the Marketplace. First, download Visual Studio Code, then find the
 
 On first run, you will be prompted to link to your jar. This will need to be re-linked if you wish to compile against a different jar, or if the
 file is moved. If no profile is selected, the plugin should prompt you, but to manually select the profile, use ctrl+shift+p and run
-"Choose MethodScript Profile". You may be prompted to update the jar if you are on a very old version, as this extension only works with
+"Choose Global MethodScript Profile". You may be prompted to update the jar if you are on a very old version, as this extension only works with
 the latest versions.
+
+In some cases, you may wish to use a different profile just for this workspace. This can happen, for instance, if you're programming a remote server. In that case, you can choose the workspace profile instead, using the "Choose Workspace MethodScript Profile" command. This will override the global profile, but just for this workspace. The global profile is always used when opening single ms files, however.
 
 ## Features
 

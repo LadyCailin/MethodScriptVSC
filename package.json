@@ -34,6 +34,7 @@
     "onLanguage:mscript"
   ],
   "main": "./dist/MethodScriptVSC.js",
+  "extensionKind": "workspace",
   "contributes": {
     "configuration": {
       "title": "MethodScript",
@@ -52,8 +53,14 @@
     },
     "commands": [
       {
-        "command": "extension.msprofile",
-        "title": "Choose MethodScript Profile"
+        "command": "extension.globalmsprofile",
+        "title": "Choose Global MethodScript Profile",
+        "icon": "commandhelper_icon.ico"
+      },
+      {
+        "command": "extension.workspacemsprofile",
+        "title": "Choose Workspace MethodScript Profile",
+        "icon": "commandhelper_icon.ico"
       }
     ],
     "languages": [

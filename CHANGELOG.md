@@ -4,6 +4,9 @@ All notable changes to the "methodscriptvsc" extension will be documented in thi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.1.0
+- Add proper support for remote development. You will likely need to override the global profile with a workspace profile. Use the "Choose Workspace MethodScript Profile" to choose a jar on the remote server to use. Using "Choose Global MethodScript Profile" will choose the profile to use generally with local development.
+
 ## 1.0.1
 - Add code completion support.
 - Add error checking as you code. Saving the file triggers the code to compile, and highlights the errors directly in Visual Studio Code.

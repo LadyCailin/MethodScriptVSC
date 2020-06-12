@@ -34,7 +34,7 @@
     "onLanguage:mscript"
   ],
   "main": "./dist/MethodScriptVSC.js",
-  "extensionKind": "workspace",
+  "extensionKind": ["workspace"],
   "contributes": {
     "configuration": {
       "title": "MethodScript",

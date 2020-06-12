@@ -2,7 +2,7 @@
   "name": "methodscriptvsc",
   "displayName": "MethodScriptVSC",
   "description": "The official Visual Studio Code extension for MethodScript support.",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "license": "MIT",
   "publisher": "MethodScriptVSC",
   "repository": {
@@ -34,7 +34,9 @@
     "onLanguage:mscript"
   ],
   "main": "./dist/MethodScriptVSC.js",
-  "extensionKind": ["workspace"],
+  "extensionKind": [
+    "workspace"
+  ],
   "contributes": {
     "configuration": {
       "title": "MethodScript",

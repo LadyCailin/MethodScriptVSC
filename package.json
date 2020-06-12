@@ -96,6 +96,7 @@
     "test-compile": "tsc -p ./"
   },
   "dependencies": {
+    "@types/glob": "^7.1.2",
     "minimist": "^1.2.5",
     "vscode-languageclient": "^5.2.1",
     "vscode-languageserver": "^5.2.1",

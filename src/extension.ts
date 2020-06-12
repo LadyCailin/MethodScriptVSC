@@ -198,7 +198,7 @@ export function pickProfile(global: boolean, context : vscode.ExtensionContext, 
 export function activate(context: vscode.ExtensionContext) {
 	console.log('methodscriptvsc activated');
 	let profileLocation = context.workspaceState.get(PROFILE_LOCATION);
-	if(profileLocation === "undefined") {
+	if(typeof(profileLocation) === "undefined") {
 		profileLocation = context.globalState.get(PROFILE_LOCATION);
 	}
 	if(typeof(profileLocation) === "undefined") {

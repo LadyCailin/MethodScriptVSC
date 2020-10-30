@@ -25,6 +25,11 @@ version you're currently running, even if the information on methodscript.com is
 You must be able to run MethodScript from the commandline to get this to work. Java must be installed, and you must have already downloaded the
 MethodScript/CommandHelper jar file.
 
+If you are using Remote - SSH, place the following in your user settings.json:
+`"remote.extensionKind": {
+    "MethodScriptVSC.methodscriptvsc": "ui"
+}`
+
 ## Release Notes
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.

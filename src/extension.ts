@@ -80,7 +80,7 @@ function startupLanguageServer(context: vscode.ExtensionContext, jar : string) :
 	let client: LanguageClient;
 
 	const serverOptions = () =>
-		new Promise<exec.ChildProcess | StreamInfo>((resolve, reject) => {
+		new Promise<exec.ChildProcess | StreamInfo>((resolve, _reject) => {
 			// Use a TCP socket, since that is more prevalent
 			const server = net.createServer(socket => {
 				console.log('MethodScript process connected');
@@ -203,7 +203,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 	if(typeof(profileLocation) === "undefined") {
 		vscode.window.showInformationMessage("No MethodScript profile is loaded. Choose the location of the MethodScript/CommandHelper jar of your installation.", "Click here to load.")
-			.then(function(value){
+			.then(function(_value){
 				pickProfile(true, context, function(success : boolean) {
 					if(success) {
 						vscode.window.showInformationMessage("Profile selected. If you wish to change the profile in the future,"
@@ -217,7 +217,7 @@ export function activate(context: vscode.ExtensionContext) {
 		loadMscript(context, context.globalState.get(PROFILE_LOCATION) as string, function(success : boolean) {
 			if(!success) {
 				vscode.window.showErrorMessage("The stored MethodScript profile could not be loaded.", "Click here to load again.")
-					.then(function(value) {
+					.then(function(_value) {
 						pickProfile(true, context, function(success : boolean) {
 							if(!success) {
 								vscode.window.showErrorMessage("Profile could not be loaded. Fix the errors, then try"
@@ -230,16 +230,16 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	context.subscriptions.push(vscode.commands.registerCommand('extension.globalmsprofile', () => {
-		pickProfile(true, context, function(success: boolean) {});
+		pickProfile(true, context, function(_success: boolean) {});
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('extension.workspacemsprofile', () => {
-		pickProfile(false, context, function(success: boolean) {});
+		pickProfile(false, context, function(_success: boolean) {});
 	}));
 }
 
 vscode.languages.registerHoverProvider('mscript', {
-	provideHover: function(document, position, token) : vscode.ProviderResult<vscode.Hover> {
+	provideHover: function(document : any, position : any, _token : any) : vscode.ProviderResult<vscode.Hover> {
 		var word : vscode.Range = document.getWordRangeAtPosition(position) as vscode.Range;
 		var line : string = document.lineAt(position.line).text;
 		line = line.substr(word.start.character, word.end.character - word.start.character);

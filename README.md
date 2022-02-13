@@ -44,6 +44,14 @@ See [CHANGELOG.md](CHANGELOG.md) for release notes.
 - Open the project in Visual Studio Code
 - Press F5 to open a new window with the extension installed
 
+## Debugging
+### Debugging langserv
+Open VSC settings (Ctrl+,) and go to the Extension->MethodScript settings. You will see an option to start the language server
+in debug mode. Check this option, and set the port you wish to use, then reload the window (Ctrl+Shift+P -> Reload Window). The
+langserv will start in debug mode, and will await a debug connection.
+### Debugging extension
+To debug the extension, set a breakpoint in the VSC window, and then run with debugging (F5).
+
 ### Installing globally
 
 To install the extension in your main Visual Studio Code installation, you must first create a VSIX package.

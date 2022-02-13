@@ -77,5 +77,7 @@ so it doesn't fail midway through: `npm install -g vsce`
 Then run `vsce publish <version>` where `<version>` is one of `major`,
 `minor`, or `patch`. You'll need the Personal Access Token from your organization.
 
+(See https://code.visualstudio.com/api/working-with-extensions/publishing-extension#get-a-personal-access-token)
+
 This will publish the version, and create a new commit and release tag. Push the changes
 afterwards, `git push`.

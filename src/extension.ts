@@ -94,19 +94,35 @@ function startupLanguageServer(context: vscode.ExtensionContext, jar : string) :
 			server.listen(0, '127.0.0.1', () => {
 				let args = [
 					"-Djava.awt.headless=true",
-					"-jar",
-					jar,
-					'lang-serv',
-					'--host',
-					'127.0.0.1',
-					'--port',
-					(server.address() as net.AddressInfo).port.toString()
 				];
+				// Get cmdline-args from the jar
+				let cmdlineArgs = [
+					"-jar", jar, "cmdline-args"
+				];
+
+				let output : string = exec.spawnSync("java", cmdlineArgs).stdout.toString().trim();
+				if(output.indexOf("Mode lang-serv was not found") !== -1) {
+					output.split(" ").forEach(function(value : string, _index : number) {
+						if(value === "-Xrs") {
+							// We won't be triggering any interrupts, so no need for this one.
+							return;
+						}
+						args.push(value);
+					});
+				}
+
 				// console.log(vscode.workspace.getConfiguration("methodscript"));
 				if(vscode.workspace.getConfiguration("methodscript").langserv.debugModeEnabled) {
-					args.unshift("-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address="
-						+ vscode.workspace.getConfiguration("methodscript").langserv.debugPort);
+					args.push("-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address="
+					+ vscode.workspace.getConfiguration("methodscript").langserv.debugPort);
 				}
+				args.push("-jar");
+				args.push(jar);
+				args.push('lang-serv');
+				args.push('--host');
+				args.push('127.0.0.1');
+				args.push('--port');
+				args.push((server.address() as net.AddressInfo).port.toString());
 				const childProcess = exec.spawn("java", args);
 				childProcess.stderr.on('data', (chunk: Buffer) => {
 					const str = chunk.toString();

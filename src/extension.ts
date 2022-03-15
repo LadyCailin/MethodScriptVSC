@@ -101,7 +101,7 @@ function startupLanguageServer(context: vscode.ExtensionContext, jar : string) :
 				];
 
 				let output : string = exec.spawnSync("java", cmdlineArgs).stdout.toString().trim();
-				if(output.indexOf("Mode lang-serv was not found") !== -1) {
+				if(output.indexOf("Mode cmdline-args was not found") === -1) {
 					output.split(" ").forEach(function(value : string, _index : number) {
 						if(value === "-Xrs") {
 							// We won't be triggering any interrupts, so no need for this one.

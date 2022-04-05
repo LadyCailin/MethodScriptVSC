@@ -113,8 +113,11 @@ function startupLanguageServer(context: vscode.ExtensionContext, jar : string) :
 
 				// console.log(vscode.workspace.getConfiguration("methodscript"));
 				if(vscode.workspace.getConfiguration("methodscript").langserv.debugModeEnabled) {
+					let debugPort : any =  vscode.workspace.getConfiguration("methodscript").langserv.debugPort;
 					args.push("-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address="
-					+ vscode.workspace.getConfiguration("methodscript").langserv.debugPort);
+					+ debugPort);
+					vscode.window.setStatusBarMessage("Starting MethodScript LangServ in debug mode, awaiting connection");
+					vscode.window.showInformationMessage("Awaiting conection from a Java Debugger on port " + debugPort);
 				}
 				args.push("-jar");
 				args.push(jar);

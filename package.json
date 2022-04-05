@@ -44,7 +44,7 @@
         "methodscript.langserv.debugModeEnabled": {
           "type": "boolean",
           "default": false,
-          "description": "If true, when the language server is started, it is started in debug mode. (Restart/reload Visual Studio Code for the setting to take effect.)"
+          "description": "If true, when the language server is started, it is started in debug mode, and awaits a connection from a Java Debugger. This setting is only meant for developers of the Language Server, and not for normal users. (Restart/reload Visual Studio Code for the setting to take effect.)"
         },
         "methodscript.langserv.debugPort": {
           "type": "number",

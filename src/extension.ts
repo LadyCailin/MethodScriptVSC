@@ -8,18 +8,16 @@ import * as API from './API';
 import {
 	LanguageClient,
 	LanguageClientOptions,
-	StreamInfo,
 	ServerOptions,
-	TransportKind,
-	SocketTransport
-  } from 'vscode-languageclient';
+	StreamInfo,
+} from 'vscode-languageclient/node';
 
 const PROFILE_LOCATION : string = "mscript.profile.location";
 
 type LoadMScriptCallback = (success : boolean) => void;
 
 let api : API.API;
-let client : LanguageClient;
+let client : LanguageClient | undefined;
 
 export function loadMscript(context: vscode.ExtensionContext, jar : string, callback : LoadMScriptCallback) {
 	let status = vscode.window.setStatusBarMessage("Buffering API from jar, code hints unavailable until finished...");
@@ -174,11 +172,11 @@ function startupLanguageServer(context: vscode.ExtensionContext, jar : string) :
 
 	// Create the language client and start the client.
 	client = new LanguageClient('MethodScript Language Server', serverOptions, clientOptions);
-	const disposable = client.start();
+	client.start();
 
-	// Push the disposable to the context's subscriptions so that the
+	// Push the client to the context's subscriptions so that the
 	// client can be deactivated on extension deactivation
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(client);
 }
 
 export function pickProfile(global: boolean, context : vscode.ExtensionContext, callback : LoadMScriptCallback) {
@@ -297,7 +295,7 @@ vscode.languages.registerHoverProvider('mscript', {
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-	if(client !== null) {
+	if(client) {
 		client.stop();
 	}
 }

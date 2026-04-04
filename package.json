@@ -64,7 +64,11 @@
         },
         "methodscript.debugAdapter.threadingMode": {
           "type": "string",
-          "enum": ["default", "sync", "async"],
+          "enum": [
+            "default",
+            "sync",
+            "async"
+          ],
           "default": "default",
           "description": "Sets the threading mode for the main thread in the eval loop during debugging, when a breakpoint is hit. Sync blocks the main host thread, async takes a debug snapshot and returns, creating a new thread on resume, and default chooses based on the execution environment."
         }
@@ -117,10 +121,14 @@
       {
         "type": "mscript",
         "label": "MethodScript Debug",
-        "languages": ["mscript"],
+        "languages": [
+          "mscript"
+        ],
         "configurationAttributes": {
           "launch": {
-            "required": ["program"],
+            "required": [
+              "program"
+            ],
             "properties": {
               "program": {
                 "type": "string",
@@ -152,7 +160,10 @@
               },
               "security": {
                 "type": "string",
-                "enum": ["none", "keypair"],
+                "enum": [
+                  "none",
+                  "keypair"
+                ],
                 "description": "Security mode. 'none' uses no authentication or encryption, 'keypair' uses SSH-style key authentication.",
                 "default": "none"
               },
@@ -197,25 +208,27 @@
     "webpack-dev": "webpack --mode development --watch",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "test-compile": "tsc -p ./"
+    "test-compile": "tsc -p ./",
+    "update-deps": "node scripts/update-deps.js",
+    "update-deps:apply": "node scripts/update-deps.js --apply"
   },
   "dependencies": {
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.8",
     "vscode-languageclient": "^9.0.1",
-    "watch": "^0.13.0"
+    "watch": "^0.19.3"
   },
   "devDependencies": {
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^18.19.0",
-    "@types/vscode": "^1.85.0",
-    "@typescript-eslint/eslint-plugin": "^8.56.1",
-    "@typescript-eslint/parser": "^8.56.1",
-    "@vscode/test-electron": "^2.3.8",
-    "eslint": "^10.0.2",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^18.19.130",
+    "@types/vscode": "^1.110.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^10.1.0",
     "glob": "^13.0.6",
-    "ts-loader": "^9.5.1",
-    "typescript": "^5.4.5",
-    "webpack": "^5.68.0",
-    "webpack-cli": "^4.9.2"
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "webpack": "^5.105.4",
+    "webpack-cli": "^4.10.0"
   }
 }

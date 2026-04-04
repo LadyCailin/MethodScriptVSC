@@ -24,7 +24,13 @@ type LoadMScriptCallback = (success : boolean) => void;
 let api : API.API;
 let client : LanguageClient | undefined;
 
-export function loadMscript(context: vscode.ExtensionContext, jar : string, callback : LoadMScriptCallback) {
+export async function loadMscript(context: vscode.ExtensionContext, jar : string, callback : LoadMScriptCallback) {
+	// Stop any existing language client before starting a new one
+	if(client) {
+		await client.stop();
+		client = undefined;
+	}
+
 	let status = vscode.window.setStatusBarMessage("Buffering API from jar, code hints unavailable until finished...");
 	// Re-add this to package.json before uncommenting
 	// "methodscript.checkForUpdates": {

@@ -31,7 +31,8 @@
   "preview": false,
   "activationEvents": [
     "onCommand:extension.msprofile",
-    "onLanguage:mscript"
+    "onLanguage:mscript",
+    "onDebug:mscript"
   ],
   "main": "./dist/MethodScriptVSC.js",
   "extensionKind": [
@@ -50,6 +51,22 @@
           "type": "number",
           "default": 9001,
           "description": "If debug mode in enabled, the port to start on."
+        },
+        "methodscript.debugAdapter.debugModeEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, when the debug adapter is started, it is started with a Java debugger (JDWP) attached. This is only meant for developers of the debug adapter itself. (Takes effect on next debug session launch.)"
+        },
+        "methodscript.debugAdapter.debugPort": {
+          "type": "number",
+          "default": 9002,
+          "description": "If debug adapter debug mode is enabled, the JDWP port to start on."
+        },
+        "methodscript.debugAdapter.threadingMode": {
+          "type": "string",
+          "enum": ["default", "sync", "async"],
+          "default": "default",
+          "description": "Sets the threading mode for the main thread in the eval loop during debugging, when a breakpoint is hit. Sync blocks the main host thread, async takes a debug snapshot and returns, creating a new thread on resume, and default chooses based on the execution environment."
         }
       }
     },
@@ -89,6 +106,88 @@
         "language": "mscript",
         "scopeName": "source.mscript",
         "path": "./syntaxes/mscript.tmLanguage.json"
+      }
+    ],
+    "breakpoints": [
+      {
+        "language": "mscript"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "mscript",
+        "label": "MethodScript Debug",
+        "languages": ["mscript"],
+        "configurationAttributes": {
+          "launch": {
+            "required": ["program"],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Absolute path to the MethodScript file to debug.",
+                "default": "${file}"
+              },
+              "jar": {
+                "type": "string",
+                "description": "Path to the MethodScript jar. If not set, uses the currently loaded profile."
+              },
+              "debugPort": {
+                "type": "number",
+                "description": "Port for the DAP debug server.",
+                "default": 6732
+              }
+            }
+          },
+          "attach": {
+            "properties": {
+              "host": {
+                "type": "string",
+                "description": "Host of the running MethodScript debug server.",
+                "default": "127.0.0.1"
+              },
+              "port": {
+                "type": "number",
+                "description": "Port of the running MethodScript debug server.",
+                "default": 6732
+              },
+              "security": {
+                "type": "string",
+                "enum": ["none", "keypair"],
+                "description": "Security mode. 'none' uses no authentication or encryption, 'keypair' uses SSH-style key authentication.",
+                "default": "none"
+              },
+              "privateKeyPath": {
+                "type": "string",
+                "description": "Path to the private key file for keypair authentication. If not set, auto-detects from ~/.ssh/."
+              }
+            }
+          }
+        },
+        "configurationSnippets": [
+          {
+            "label": "MethodScript: Launch",
+            "description": "Launch and debug a MethodScript file.",
+            "body": {
+              "type": "mscript",
+              "request": "launch",
+              "name": "Debug MethodScript",
+              "program": "^\"\\${file}\"",
+              "debugPort": 6732
+            }
+          },
+          {
+            "label": "MethodScript: Attach",
+            "description": "Attach to a running MethodScript debug server.",
+            "body": {
+              "type": "mscript",
+              "request": "attach",
+              "name": "Attach to MethodScript",
+              "host": "127.0.0.1",
+              "port": 6732,
+              "security": "none"
+            }
+          }
+        ]
       }
     ]
   },

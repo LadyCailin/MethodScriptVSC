@@ -886,7 +886,7 @@ class MSDebugAdapterFactory implements vscode.DebugAdapterDescriptorFactory {
  */
 function findPrivateKey(): string | undefined {
 	const sshDir = path.join(os.homedir(), '.ssh');
-	const candidates = ['id_rsa', 'id_ecdsa', 'id_ed25519'];
+	const candidates = ['id_ed25519', 'id_ecdsa', 'id_rsa'];
 	for(const name of candidates) {
 		const keyPath = path.join(sshDir, name);
 		if(fs.existsSync(keyPath)) {
@@ -977,12 +977,11 @@ function connectAndAuthenticate(
 				// Phase 2: Sign the nonce and send signature + public key
 				let signature: Buffer;
 				try {
-					// Java's RSAEncrypt.encryptWithPrivate uses Cipher with RSA_PKCS1_PADDING.
-					// Node's crypto.privateEncrypt with RSA_PKCS1_PADDING is the equivalent.
-					signature = crypto.privateEncrypt(
-						{ key: privateKeyPem, padding: crypto.constants.RSA_PKCS1_PADDING },
-						nonce
-					);
+					// crypto.sign auto-detects the key type from the PEM.
+					// Ed25519 requires null algorithm; RSA and ECDSA use SHA256.
+					const keyType = publicKeyStr.split(/\s+/)[0];
+					const algorithm = keyType === 'ssh-ed25519' ? null : 'SHA256';
+					signature = crypto.sign(algorithm, nonce, privateKeyPem);
 				} catch(e: any) {
 					handshakeDone = true;
 					socket.removeListener('data', onHandshakeData);
